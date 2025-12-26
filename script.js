@@ -114,7 +114,7 @@ const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 // - UA send
 // - timeout (AbortController)
 // ==============================
-const GA_MEASUREMENT_ID = "G-XXXXXXXXXX";
+const GA_MEASUREMENT_ID = "G-Z2LQH9361G";
 
 // GA4 client_id を取得してGASへ渡す（広告流入→CVの紐付けを切らない）
 // - 1st: gtag('get', MEASUREMENT_ID, 'client_id', cb)
@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ▼案件ごとにここだけ差し替え
   const scriptURL =
-    "https://script.google.com/macros/s/XXXXXXXX/exec";
+    "https://script.google.com/macros/s/AKfycbwXP7P76-p1fhuibj6Rn1S06rfoX2uz2f2pMeE-4bgolMrDXkSBTSGvlqb-UFeItEfaow/exec";
   const thanksPage = "thanks.html";
   // ▲▲▲
 

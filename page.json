@@ -4,8 +4,8 @@
   "ADDRESS": "大阪府東大阪市（住所を入れる）",
   "OWNER_NAME": "山田 太郎",
   "LP_SOURCE_NAME": "demo_recruit_lp_acme",
-  "GA_MEASUREMENT_ID": "G-XXXXXXXXXX",
-  "GAS_EXEC_URL": "https://script.google.com/macros/s/XXXXXXXX/exec",
+  "GA_MEASUREMENT_ID": "G-Z2LQH9361G",
+  "GAS_EXEC_URL": "https://script.google.com/macros/s/AKfycbwXP7P76-p1fhuibj6Rn1S06rfoX2uz2f2pMeE-4bgolMrDXkSBTSGvlqb-UFeItEfaow/exec",
   "THANKS_PAGE": "thanks.html",
   "variants": [
     "sim-income"
