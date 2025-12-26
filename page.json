@@ -1,0 +1,17 @@
+{
+  "COMPANY_NAME": "Acme建設",
+  "PHONE_NUMBER": "090-0000-0000",
+  "ADDRESS": "大阪府東大阪市（住所を入れる）",
+  "OWNER_NAME": "山田 太郎",
+  "LP_SOURCE_NAME": "demo_recruit_lp_acme",
+  "GA_MEASUREMENT_ID": "G-XXXXXXXXXX",
+  "GAS_EXEC_URL": "https://script.google.com/macros/s/XXXXXXXX/exec",
+  "THANKS_PAGE": "thanks.html",
+  "variants": [
+    "sim-income"
+  ],
+  "CONTACT_PERSON": "担当者名",
+  "CONTACT_EMAIL": "contact@example.com",
+  "CONTACT_TEL": "090-0000-0000",
+  "ASSET_VERSION": "2025-12-23"
+}

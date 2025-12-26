@@ -1,0 +1,8 @@
+{
+  "name": "master-lp-template-builder",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "build": "node builder/build.js"
+  }
+}

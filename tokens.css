@@ -1,0 +1,25 @@
+:root {
+  --color-main: #e63946;
+  --color-accent: #457b9d;
+  --color-bg: #ffffff;
+  --color-surface: #f7f7f7;
+  --color-text: #111111;
+  --color-muted: #666666;
+
+  --font-base: clamp(14px, 2vw, 16px);
+  --font-lg: clamp(18px, 2.5vw, 24px);
+  --font-xl: clamp(22px, 3vw, 32px);
+
+  --space-xs: 8px;
+  --space-sm: 16px;
+  --space-md: 24px;
+  --space-lg: 32px;
+  --space-xl: 48px;
+  --space-section: 72px;
+
+  --radius: 8px;
+
+  --shadow: 0 6px 20px rgba(0,0,0,0.08);
+
+  --container: 1080px;
+}

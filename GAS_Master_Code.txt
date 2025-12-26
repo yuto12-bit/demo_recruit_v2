@@ -1,0 +1,330 @@
+// ===================================================
+// 【設定エリア】ここだけ触る（テンプレではプレースホルダー）
+// ===================================================
+const SHEET_NAME = '{{SHEET_NAME}}'; // 例: フォーム（固定運用なら "フォーム"）
+
+// 2025-12-31に翼のメールへ差し替え
+const RECRUIT_TO = '{{RECRUIT_TO}}'; // 例: tsubasa@example.com
+
+// 公開〜1ヶ月は監査用に勇翔をCC（不要になったら '' にする）
+const RECRUIT_CC = '{{RECRUIT_CC}}';
+
+// 異常時アラート（no-corsでクライアント側で検知できないため）
+const ALERT_TO = '{{ALERT_TO}}'; // 例: yuto1201h@gmail.com（空なら無効） // 例: yuto1201h@gmail.com  / 使わないなら ''
+
+const EMAIL_SUBJECT_PREFIX = '{{EMAIL_SUBJECT_PREFIX}}'; // 例: 【採用LPからの応募】
+
+// GA4（使う場合のみ埋める。使わないなら空文字でもOK）
+const GA4_MEASUREMENT_ID = '{{GA4_MEASUREMENT_ID}}';
+const GA4_API_SECRET     = '{{GA4_API_SECRET}}';
+
+// GA4 に送る LP 情報（テンプレ化）
+const GA4_PAGE_LOCATION  = '{{LP_URL}}';         // 例: https://xxxxx.github.io/xxx/
+const GA4_PAGE_TITLE     = '{{GA4_PAGE_TITLE}}'; // 例: 採用LP_サーバー計測
+
+// errorsシート名（固定）
+const ERROR_SHEET_NAME = 'errors';
+
+
+// ===================================================
+// payload取得（フォーム送信 e.parameter / JSON送信 両対応）
+// 追加: ua / honeypot も拾う
+// ===================================================
+function getPayload_(e) {
+  // 1) フォーム送信（application/x-www-form-urlencoded / multipart/form-data）
+  const p = (e && e.parameter) ? e.parameter : {};
+  if (p && Object.keys(p).length) {
+    return {
+      name:     p.name || '',
+      email:    p.email || '',
+      phone:    p.phone || p.tel || '',
+      message:  p.message || '',
+      source:   p.source || '',
+      ua:       p.ua || '',
+      honeypot: p.honeypot || '',
+      client_id: p.client_id || p.cid || '',
+      page_id: p.page_id || ''
+    };
+  }
+
+  // 2) fetch(JSON) 送信（text/plain / application/json）
+  const raw = e && e.postData && e.postData.contents ? e.postData.contents : '';
+  if (raw) {
+    try {
+      const j = JSON.parse(raw);
+      return {
+        name:     j.name || '',
+        email:    j.email || '',
+        phone:    j.phone || j.tel || '',
+        message:  j.message || '',
+        source:   j.source || '',
+        ua:       j.ua || '',
+        honeypot: j.honeypot || '',
+        client_id: j.client_id || j.cid || '',
+        page_id: j.page_id || ''
+      };
+    } catch (_) {}
+  }
+
+  return { name:'', email:'', phone:'', message:'', source:'', ua:'', honeypot:'', client_id:'', page_id:'' };
+}
+
+
+// ===================================================
+// errorsシート（原因追跡用）
+// 追加: ua 列をヘッダーに確実に持たせる
+// ===================================================
+function getOrCreateErrorSheet_() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sh = ss.getSheetByName(ERROR_SHEET_NAME);
+
+  const headers = [
+    "timestamp","type","status","message","stack",
+    "path","ua","payload","note"
+  ];
+
+  if (!sh) {
+    sh = ss.insertSheet(ERROR_SHEET_NAME);
+    sh.appendRow(headers);
+    return sh;
+  }
+
+  // 既存シートがあっても、ヘッダーはこの形に揃える（不足列は追加される）
+  const lastCol = Math.max(sh.getLastColumn(), headers.length);
+  const current = sh.getRange(1, 1, 1, lastCol).getValues()[0].filter(v => v !== '');
+  const needRewrite = current.join('|') !== headers.join('|');
+
+  if (needRewrite) {
+    sh.getRange(1, 1, 1, headers.length).setValues([headers]);
+  }
+
+  return sh;
+}
+
+function logError_(obj) {
+  const sh = getOrCreateErrorSheet_();
+
+  sh.appendRow([
+    new Date(),
+    obj.type || "server",
+    obj.status || "",
+    obj.message || "",
+    obj.stack || "",
+    obj.path || "/exec",
+    obj.ua || "",
+    obj.payload || "",
+    obj.note || ""
+  ]);
+
+  // no-cors対策：クライアント側で検知できない失敗を見落とさない
+  try {
+    if (typeof ALERT_TO !== "undefined" && ALERT_TO && String(ALERT_TO).trim()) {
+      const subject = `[LP ERROR] ${obj.type || "server"} / ${obj.message || ""}`;
+      const body = [
+        `time: ${new Date().toISOString()}`,
+        `type: ${obj.type || ""}`,
+        `status: ${obj.status || ""}`,
+        `message: ${obj.message || ""}`,
+        `note: ${obj.note || ""}`,
+        `ua: ${obj.ua || ""}`,
+        `payload: ${obj.payload || ""}`
+      ].join("\n");
+      MailApp.sendEmail(String(ALERT_TO).trim(), subject, body);
+    }
+  } catch (e) {}
+}
+
+
+
+// ===================================================
+// フォーム本体
+// ===================================================
+function doPost(e) {
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(10000)) {
+    // Busyもログ残す（頻発したら何かがおかしい）
+    logError_({ type:"server", status:429, message:"Busy", ua:"", payload:"", note:"lock failed" });
+    return ContentService.createTextOutput("Busy")
+      .setMimeType(ContentService.MimeType.TEXT);
+  }
+
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = ss.getSheetByName(SHEET_NAME);
+    if (!sheet) throw new Error(`Sheet not found: ${SHEET_NAME}`);
+
+    const payload = getPayload_(e);
+
+    // honeypot：値が入ってたらボット。成功を返して黙って捨てる（情報を与えない）
+    if (payload.honeypot && String(payload.honeypot).trim()) {
+      logError_({
+        type: "spam",
+        status: 200,
+        message: "honeypot_triggered",
+        ua: payload.ua || "",
+        payload: JSON.stringify(payload),
+        note: "drop silently"
+      });
+      return ContentService.createTextOutput("Success")
+        .setMimeType(ContentService.MimeType.TEXT);
+    }
+
+    // 最低限のサーバ側バリデ（JSが死んでもゴミを入れない保険）
+    if (!payload.name || !payload.email || !payload.phone || !payload.message) {
+      logError_({
+        type: "server",
+        status: 400,
+        message: "validation_failed",
+        ua: payload.ua || "",
+        payload: (e && e.postData && e.postData.contents) ? e.postData.contents : JSON.stringify(payload),
+        note: "required fields missing"
+      });
+      return ContentService.createTextOutput("Error: validation_failed")
+        .setMimeType(ContentService.MimeType.TEXT);
+    }
+
+    // 1) シートへ保存（A〜J）
+    sheet.appendRow([
+      new Date(),
+      payload.name,
+      payload.email,
+      payload.phone,
+      payload.message,
+      payload.source,
+      '未',       // G: 連絡可否
+      '未',       // H: 面接設定
+      '検討中',   // I: 採用結果
+      ''          // J: 備考
+    ]);
+
+    // 2) メール通知（TO/CC差し替え前提）
+    sendRecruitMail(payload);
+
+    // 3) GA4へ送信（失敗してもユーザーには成功返す）
+    sendGa4Event(payload);
+
+    return ContentService.createTextOutput("Success")
+      .setMimeType(ContentService.MimeType.TEXT);
+
+  } catch (err) {
+    logError_({
+      type: "server",
+      status: 500,
+      message: err && err.message ? err.message : String(err),
+      stack: err && err.stack ? err.stack : "",
+      ua: (e && e.parameter && e.parameter.ua) ? e.parameter.ua : "",
+      payload: (e && e.postData && e.postData.contents) ? e.postData.contents : "",
+      note: "doPost catch"
+    });
+
+    return ContentService.createTextOutput("Error: " + (err && err.message ? err.message : String(err)))
+      .setMimeType(ContentService.MimeType.TEXT);
+
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+
+// ===================================================
+// メール通知（差し替え安全化）
+// ===================================================
+function sendRecruitMail(p) {
+  const name = p.name || '（名前なし）';
+  const subject = `${EMAIL_SUBJECT_PREFIX}${name}`;
+
+  const body = [
+    '採用LPから応募がありました。',
+    '',
+    '日時: ' + new Date().toLocaleString(),
+    '名前: ' + (p.name || ''),
+    'メール: ' + (p.email || ''),
+    '電話番号: ' + (p.phone || ''),
+    '',
+    '【志望動機・質問】',
+    (p.message || ''),
+    '',
+    '送信元: ' + (p.source || '')
+  ].join('\n');
+
+  const mail = { to: RECRUIT_TO, subject, body };
+
+  if (RECRUIT_CC && RECRUIT_CC.trim()) mail.cc = RECRUIT_CC;
+  if (p.email && p.email.trim()) mail.replyTo = p.email.trim();
+
+  MailApp.sendEmail(mail);
+}
+
+
+// ===================================================
+// GA4 送信用（失敗時はerrorsにも残す）
+// ===================================================
+function sendGa4Event(p) {
+  // GA4未設定なら送らない（テンプレ運用の保険）
+  if (!GA4_MEASUREMENT_ID || !GA4_API_SECRET) return;
+
+  // client_id が取れない場合は attribution が切れるため、送信しない（errorsに残す）
+  if (!p || !p.client_id) {
+    logError_({
+      type: "ga4",
+      status: 200,
+      message: "missing_client_id",
+      payload: JSON.stringify(p || {}),
+      note: "skip GA4: client_id not provided from front"
+    });
+    return;
+  }
+
+  const url =
+    'https://www.google-analytics.com/mp/collect'
+    + `?measurement_id=${GA4_MEASUREMENT_ID}`
+    + `&api_secret=${GA4_API_SECRET}`;
+
+  const payload = {
+    client_id: String(p.client_id),
+    events: [
+      {
+        name: 'entry_submit_server',
+        params: {
+          page_location: GA4_PAGE_LOCATION,
+          page_title: GA4_PAGE_TITLE,
+          source: p.source || '(not_set)',
+          page_id: p.page_id || ''
+        }
+      }
+    ]
+  };
+
+  try {
+    const res = UrlFetchApp.fetch(url, {
+      method: 'post',
+      contentType: 'application/json',
+      payload: JSON.stringify(payload),
+      muteHttpExceptions: true
+    });
+    Logger.log('GA4 Status: ' + res.getResponseCode());
+    if (res.getResponseCode() >= 400) {
+      logError_({
+        type: "ga4",
+        status: res.getResponseCode(),
+        message: "mp_collect_failed",
+        payload: JSON.stringify(payload),
+        note: "GA4 response >= 400"
+      });
+    }
+  } catch (e) {
+    logError_({
+      type: "ga4",
+      status: "exception",
+      message: e.message || String(e),
+      ua: p.ua || "",
+      payload: JSON.stringify(payload),
+      note: "GA4 send failed"
+    });
+  }
+}
+
+// テスト用
+function testSendGa4() {
+  sendGa4Event({ source: 'test_run' });
+}

@@ -1,0 +1,71 @@
+<section id="v-sim-income" class="v-sim-income sim-income" data-component="sim-income" data-section="sim-income">
+  <div class="container sim-income__inner">
+    <h2 class="section-title">月収・年収シミュレーション</h2>
+    <p class="sim-income__lead">
+      あなたの働き方に合わせた収入の目安を計算できます。<br>
+      スライダーを動かしてご確認ください。
+    </p>
+
+    <div class="sim-income__calculator">
+      <div class="sim-income__inputs">
+        <div class="sim-income__group">
+          <label for="v-sim-income--daily-wage">
+            日給
+            <span class="sim-income__value-display"><span data-role="display-daily">15,000</span>円</span>
+          </label>
+          <input type="range" id="v-sim-income--daily-wage" data-role="daily-wage" min="12000" max="18000" step="500" value="15000">
+          <div class="sim-income__range-labels">
+            <span>1.2万</span>
+            <span>1.8万</span>
+          </div>
+        </div>
+
+        <div class="sim-income__group">
+          <label for="v-sim-income--weekly-days">
+            週の出勤日数
+            <span class="sim-income__value-display"><span data-role="display-weekly">3</span>日</span>
+          </label>
+          <input type="range" id="v-sim-income--weekly-days" data-role="weekly-days" min="1" max="6" step="1" value="3">
+          <div class="sim-income__range-labels">
+            <span>週1</span>
+            <span>週6</span>
+          </div>
+        </div>
+
+        <div class="sim-income__group">
+          <label for="v-sim-income--transport">
+            交通費（月額）
+            <span class="sim-income__value-display"><span data-role="display-transport">0</span>円</span>
+          </label>
+          <input type="range" id="v-sim-income--transport" data-role="transport" min="0" max="20000" step="1000" value="0">
+          <div class="sim-income__range-labels">
+            <span>0</span>
+            <span>2万</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sim-income__results">
+        <div class="sim-income__result-box">
+          <span class="sim-income__result-label">月収目安</span>
+          <div class="sim-income__result-value">
+            <span data-role="result-monthly">180,000</span><span class="unit">円</span>
+          </div>
+        </div>
+        <div class="sim-income__result-box highlight">
+          <span class="sim-income__result-label">年収換算</span>
+          <div class="sim-income__result-value">
+            <span data-role="result-yearly">2,160,000</span><span class="unit">円</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="sim-income__note">
+      ※上記は目安であり、実際の支給額を保証するものではありません。<br>
+      ※シフトの状況や現場により変動します。<br>
+      ※税金・社会保険料などは控除前の金額です。<br>
+      ※詳細は面談にてご説明いたします。
+    </p>
+  </div>
+</section>

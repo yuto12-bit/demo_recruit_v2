@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プライバシーポリシー</title>
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/tokens.css">
+    <link rel="stylesheet" href="./css/layout.css">
+    <style>
+        /* privacy.html専用の簡易調整 */
+        .privacy-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 1.5rem;
+            color: var(--text-color, #333);
+            font-family: sans-serif;
+        }
+        .privacy-content {
+            margin-bottom: 3rem;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+        /* 移植したテキストのクラスに対するスタイル補正 */
+        .privacy__text {
+            margin-bottom: 1.5rem;
+        }
+        .privacy__note {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 2rem;
+        }
+        .back-link {
+            display: inline-block;
+            text-decoration: underline;
+            color: inherit;
+            cursor: pointer;
+            padding: 1rem;
+        }
+        .back-link:hover {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+
+    <main class="privacy-container">
+        <h1>プライバシーポリシー</h1>
+        <hr style="margin: 2rem 0; opacity: 0.2;">
+
+        <div class="privacy-content">
+            <p class="privacy__text">
+              本フォームからご入力いただいた氏名・電話番号・メールアドレス・その他の情報は、
+              採用選考およびご連絡のために利用します。
+            </p>
+        
+            <p class="privacy__text">
+              当社は、採用応募への対応、応募状況の把握、採用活動の改善（LP制作・計測・運用支援を含む）を目的として、
+              採用業務の一部を外部パートナーに委託する場合があります。
+              その際、上記目的の達成に必要な範囲で、応募者の個人情報を当該外部パートナーが取り扱うことがあります。
+              当社は外部パートナーに対し、目的外利用の禁止、第三者への再提供の禁止、漏えい防止等を求め、適切に監督します。
+            </p>
+        
+            <p class="privacy__text">
+              法令に基づく場合を除き、ご本人の同意なく第三者に提供することはありません。
+              ただし、上記利用目的の達成に必要な範囲で、個人情報の取扱いを委託する場合があります。
+            </p>
+        
+            <p class="privacy__text">
+              個人情報の開示・訂正・削除等のご希望がある場合は、下記窓口までご連絡ください。
+            </p>
+        
+            <p class="privacy__text">
+              事業者名：{{COMPANY_NAME}}<br>
+              担当者名：{{CONTACT_PERSON}}<br>
+              電話番号：{{CONTACT_TEL}}<br>
+              メールアドレス：{{CONTACT_EMAIL}}
+            </p>
+        
+            <p class="privacy__text privacy__note">
+              本プライバシーポリシーの内容は、法令の改正等に応じて予告なく変更される場合があります。
+              最新の内容は本ページに掲載します。
+            </p>
+
+            </div>
+
+        <div style="text-align: center;">
+            <a href="index.html" class="back-link">← トップページに戻る</a>
+        </div>
+    </main>
+
+</body>
+</html>

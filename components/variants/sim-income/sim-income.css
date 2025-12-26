@@ -1,0 +1,141 @@
+/* sim-income.css（scoped） */
+
+.v-sim-income {
+  padding: 4rem 0;
+  background-color: #f9f9f9; /* 背景色は全体のトーンに合わせて変更可 */
+}
+
+.v-sim-income .sim-income__lead {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.v-sim-income .sim-income__calculator {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* PCレイアウト */
+@media (min-width: 768px) {
+  .v-sim-income .sim-income__calculator {
+    flex-direction: row;
+    align-items: center;
+    padding: 2.5rem;
+  }
+  .v-sim-income .sim-income__inputs {
+    flex: 1;
+    padding-right: 2rem;
+    border-right: 1px solid #eee;
+  }
+  .v-sim-income .sim-income__results {
+    flex: 0.8;
+    padding-left: 2rem;
+  }
+}
+
+/* 入力エリア */
+.v-sim-income .sim-income__group {
+  margin-bottom: 1.5rem;
+}
+
+.v-sim-income .sim-income__group:last-child {
+  margin-bottom: 0;
+}
+
+.v-sim-income .sim-income__group label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.v-sim-income .sim-income__value-display {
+  color: #0056b3; /* アクセントカラー（必要に応じて変更） */
+  font-size: 1.1rem;
+}
+
+.v-sim-income .sim-income__group input[type="range"] {
+  width: 100%;
+  cursor: pointer;
+  height: 6px;
+  background: #ddd;
+  border-radius: 5px;
+  outline: none;
+  appearance: none; /* 標準スタイル解除 */
+}
+
+/* スライダーのつまみ（Chrome/Safari/Edge） */
+.v-sim-income .sim-income__group input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #0056b3;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.v-sim-income .sim-income__range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #888;
+  margin-top: 4px;
+}
+
+/* 結果エリア */
+.v-sim-income .sim-income__results {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.v-sim-income .sim-income__result-box {
+  background: #f4f4f4;
+  padding: 1rem;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.v-sim-income .sim-income__result-box.highlight {
+  background: #eef6ff; /* 強調背景 */
+  border: 1px solid #cce5ff;
+}
+
+.v-sim-income .sim-income__result-label {
+  display: block;
+  font-size: 0.85rem;
+  color: #555;
+  margin-bottom: 0.25rem;
+}
+
+.v-sim-income .sim-income__result-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.v-sim-income .sim-income__result-value .unit {
+  font-size: 0.9rem;
+  margin-left: 4px;
+  font-weight: normal;
+}
+
+/* 注意書き */
+.v-sim-income .sim-income__note {
+  margin-top: 1.5rem;
+  font-size: 0.75rem;
+  color: #999;
+  line-height: 1.5;
+  text-align: center;
+}

@@ -1,0 +1,380 @@
+<!--
+【このテンプレで案件ごとに必ず変更する場所】
+
+[HTML]
+- {{COMPANY_NAME}}
+- {{PHONE_NUMBER}}
+- {{ADDRESS}}
+- {{OWNER_NAME}}
+- {{LP_SOURCE_NAME}}
+- GA4測定ID：{{GA_MEASUREMENT_ID}} を実IDに置き換え
+
+[JS（script.js）]
+- const scriptURL = 'GASのWebアプリURL';
+- thanksPage（必要なら）
+
+[GAS（Code.gs）]
+- SHEET_NAME
+- NOTIFY_EMAIL
+- EMAIL_SUBJECT
+-->
+
+<!DOCTYPE html>
+<html lang="ja">
+...
+
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{COMPANY_NAME}}｜東大阪の適正価格×高品質施工</title>
+  <meta name="description" content="東大阪エリアで外壁・内装・リフォームを高品質かつ適正価格で実現。中間マージン徹底排除。無料見積もり・即日対応。" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="reset.css" />
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="layout.css" />
+
+  
+  <link rel="stylesheet" href="variants.css?v={{ASSET_VERSION}}" />
+<!-- GA4（案件ごとに {{GA_MEASUREMENT_ID}} を置き換える） -->
+<script async src="https://www.googletagmanager.com/gtag/js?id={{GA_MEASUREMENT_ID}}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '{{GA_MEASUREMENT_ID}}');
+</script>
+
+</head>
+
+<body data-page-id="{{LP_SOURCE_NAME}}">
+
+<header class="header">
+  <div class="container header__inner">
+    <a href="#" class="header__logo">{{COMPANY_NAME}}</a>
+    <button class="header__toggle" aria-expanded="false" data-event="menu_toggle">≡</button>
+
+    <nav class="header__nav" id="global-nav">
+      <ul class="nav__list">
+        <li><a href="#works" data-event="nav_works">施工実績</a></li>
+        <li><a href="#service" data-event="nav_service">サービス</a></li>
+        <li><a href="#flow" data-event="nav_flow">流れ</a></li>
+        <li><a href="#faq" data-event="nav_faq">FAQ</a></li>
+        <li><a href="#contact" data-event="nav_contact">問い合わせ</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- Hero -->
+<section class="hero module-wrapper">
+   <div class="hero__bg"></div>
+  <div class="container hero__inner">
+    <h1 class="hero__title">
+      【 東大阪 】中間マージン徹底排除。<br>
+      適正価格×高品質施工を約束する {{COMPANY_NAME}}
+    </h1>
+    <p class="hero__text">「追加費用ゼロ」「最短即日対応」。地域密着の建築・リフォームサービス。</p>
+
+    <div class="hero__cta">
+      <a href="#contact" class="btn btn--main" data-event="cta_hero">無料見積もりはこちら</a>
+      <a href="tel:{{PHONE_NUMBER}}" class="btn btn--sub" data-event="call_hero">
+        電話で相談（{{PHONE_NUMBER}}）
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA TOP -->
+<section class="cta cta--top module-wrapper">
+  <div class="container cta__inner">
+    <p class="cta__headline">【 今月限定：施工枠残り <strong>3件</strong> 】</p>
+    <div class="cta__buttons">
+      <a href="#contact" class="btn btn--main" data-event="cta_top">無料見積もりを依頼する</a>
+      <a href="tel:{{PHONE_NUMBER}}" class="btn btn--sub" data-event="call_top">電話で相談する</a>
+    </div>
+  </div>
+</section>
+
+<!-- Works -->
+<section id="works" class="module-wrapper">
+  <div class="container section__inner">
+    <h2 class="section__title">施工実績</h2>
+
+    <div class="works__list">
+      <article class="work-card">
+        <img src="images/work1.jpg" alt="戸建て外壁の塗装事例">
+        <h3 class="work-card__title">外壁リフォーム</h3>
+      </article>
+
+      <article class="work-card">
+        <img src="images/work2.jpg" alt="キッチン内装リフォーム事例">
+        <h3 class="work-card__title">内装リフォーム</h3>
+      </article>
+
+      <article class="work-card">
+        <img src="images/work3.jpg" alt="フェンス交換工事の事例">
+        <h3 class="work-card__title">外構工事</h3>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- Strong -->
+<section class="module-wrapper">
+  <div class="container section__inner">
+    <h2 class="section__title">選ばれる理由</h2>
+
+    <div class="strong__list">
+      <div class="strong__item">
+        <h3 class="strong__title">中間マージン徹底排除</h3>
+        <p class="strong__text">自社職人だからこその適正価格。</p>
+      </div>
+
+      <div class="strong__item">
+        <h3 class="strong__title">最短即日対応</h3>
+        <p class="strong__text">東大阪密着。スピード対応。</p>
+      </div>
+
+      <div class="strong__item">
+        <h3 class="strong__title">追加費用ゼロ</h3>
+        <p class="strong__text">明朗見積で安心して依頼できます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Story -->
+<section class="module-wrapper">
+  <div class="container section__inner">
+    <h2 class="section__title">代表プロフィール</h2>
+
+    <div class="story__inner">
+      <img src="images/owner.jpg" alt="代表者写真">
+      <div class="story__body">
+        <h3 class="story__name">代表：{{OWNER_NAME}}</h3>
+        <p class="story__text">
+          東大阪で10年以上、建築とリフォームに携わってきました。地域の人に信頼される施工を心がけています。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Service -->
+<section id="service" class="module-wrapper">
+  <div class="container section__inner">
+    <h2 class="section__title">サービス内容</h2>
+
+    <div class="service__list">
+      <div class="service__item">
+        <h3 class="service__title">外壁リフォーム</h3>
+        <p class="service__text">高耐久塗料で10〜15年持つ外壁に。</p>
+      </div>
+
+      <div class="service__item">
+        <h3 class="service__title">内装リフォーム</h3>
+        <p class="service__text">キッチン・トイレ・浴室など家全体に対応。</p>
+      </div>
+
+      <div class="service__item">
+        <h3 class="service__title">外構工事</h3>
+        <p class="service__text">フェンス、カーポート、玄関まわりもOK。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Flow -->
+<section id="flow" class="module-wrapper">
+  <div class="container section__inner">
+    <h2 class="section__title">依頼の流れ</h2>
+
+    <ol class="flow__list">
+      <li class="flow__item">お問い合わせ</li>
+      <li class="flow__item">現地調査</li>
+      <li class="flow__item">見積もり提示</li>
+      <li class="flow__item">着工</li>
+      <li class="flow__item">完工</li>
+    </ol>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="module-wrapper">
+  <div class="container section__inner">
+    <h2 class="section__title">よくある質問</h2>
+
+    <div class="faq__list">
+      <div class="faq__item">
+        <div class="faq__q" role="button" aria-expanded="false" data-event="faq_open">
+          見積もりは無料ですか？
+        </div>
+        <div class="faq__a">はい、無料です。</div>
+      </div>
+
+      <div class="faq__item">
+        <div class="faq__q" role="button" aria-expanded="false" data-event="faq_open">
+          小さな工事も対応できますか？
+        </div>
+        <div class="faq__a">手すり設置などの小工事も対応可能です。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Access -->
+<section id="access" class="module-wrapper">
+  <div class="container section__inner">
+    <h2 class="section__title">アクセス</h2>
+    <div class="access__map">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=XXXX"
+        width="100%" height="400" style="border:0;" allowfullscreen loading="lazy">
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<!-- VARIANTS:START -->
+<!-- VARIANTS:END -->
+
+<!-- Contact -->
+<section id="contact" class="module-contact module-wrapper">
+  <div class="container section__inner">
+    <h2 class="section__title">お問い合わせ</h2>
+
+    <p class="contact__note">
+      お見積もり・ご相談は無料です。<br>
+      以下のフォームよりお気軽にご連絡ください。
+    </p>
+
+    <div class="contact__form-wrapper">
+      
+      <form id="contactForm" class="form">
+
+    <input type="text" name="honeypot" style="display:none;" tabindex="-1" autocomplete="off">
+
+  <input
+  type="hidden"
+  name="source"
+  id="source_field"
+  value="{{LP_SOURCE_NAME}}"
+/>
+
+
+  <div class="form__group">
+    <label for="name" class="form__label">お名前 <span class="form__required">必須</span></label>
+    <input type="text" name="name" id="name" class="form__input" placeholder="例：山田 太郎" required>
+  </div>
+
+  <div class="form__group">
+    <label for="tel" class="form__label">電話番号 <span class="form__required">必須</span></label>
+    <input type="tel" name="phone" id="tel" class="form__input" placeholder="例：090-1234-5678" required>
+  </div>
+
+  <div class="form__group">
+    <label for="email" class="form__label">メールアドレス <span class="form__required">必須</span></label>
+    <input type="email" name="email" id="email" class="form__input" placeholder="例：info@example.com" required>
+  </div>
+
+  <div class="form__group">
+    <label for="message" class="form__label">ご相談内容</label>
+    <textarea name="message" id="message" class="form__textarea" rows="5" placeholder="ご質問や工事のご希望時期などをご記入ください。"></textarea>
+  </div>
+
+  <div style="margin: 2rem 0; text-align: center;">
+    <label style="cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem;">
+        <input type="checkbox" name="privacy_agreement" required style="transform: scale(1.2); cursor: pointer;">
+        <span style="font-size: 0.9rem;">
+            <a href="privacy.html" target="_blank" style="text-decoration: underline; color: inherit;">プライバシーポリシー</a>
+            に同意して送信する
+        </span>
+    </label>
+</div>
+
+  <div class="form__submit">
+    <button type="submit" class="btn btn--main btn--submit" data-event="submit_form">送信する</button>
+  </div>
+</form>
+
+      
+      </div>
+  </div>
+</section>
+
+
+<!-- CTA bottom -->
+<section class="cta cta--bottom module-wrapper">
+  <div class="container cta__inner">
+    <div class="cta__buttons">
+      <a href="#contact" class="btn btn--main" data-event="cta_bottom">無料見積もりを依頼する</a>
+      <a href="tel:{{PHONE_NUMBER}}" class="btn btn--sub" data-event="call_bottom">電話で相談する</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- Floating CTA（SP only） -->
+<div class="floating-cta">
+  <a href="tel:{{PHONE_NUMBER}}" class="floating-cta__item floating-cta__item--tel" data-event="floating_tel">
+    電話で相談
+  </a>
+  <a href="#contact" class="floating-cta__item floating-cta__item--reserve" data-event="floating_reserve">
+    Web見積もり
+  </a>
+</div>
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <p class="footer__logo">{{COMPANY_NAME}}</p>
+    <p class="footer__copy">
+      〒{{ADDRESS}}｜
+      <a href="tel:{{PHONE_NUMBER}}" data-event="call_footer">TEL: {{PHONE_NUMBER}}</a><br>
+      <a href="privacy" class="footer__policy">プライバシーポリシー</a>
+    </p>
+  </div>
+</footer>
+
+  <!-- JS（キャッシュ対策のため必ず ?v= を付ける） -->
+  <script src="variants.js?v={{ASSET_VERSION}}"></script>
+
+  <script src="script.js?v={{ASSET_VERSION}}"></script>
+
+
+<script>
+  (function () {
+    // hidden 要素を取得
+    const el = document.getElementById('source_field');
+    if (!el) return;
+
+    const params = new URLSearchParams(window.location.search);
+
+    // ?utm_source=xxx がついていればそれを最優先
+    const utmSource = params.get('utm_source');
+
+    // 何も来てなければ referrer（遷移元URL）を見る
+    const ref = document.referrer || '';
+
+    let value = el.value || ''; // 初期値（{{LP_SOURCE_NAME}}）が入ってるかもしれない
+
+    if (utmSource) {
+      value = utmSource;
+    } else if (!value) {
+      // 初期値もなく、utm_source もない場合だけ fallback
+      value = ref || 'direct';
+    }
+
+    el.value = value;
+  })();
+</script>
+
+
+</body>
+</html>
